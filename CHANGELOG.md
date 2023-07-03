@@ -1,5 +1,13 @@
 # Changelog
 
+## \[0.4.3]
+
+### bug
+
+- [`8e6f88e`](https://www.github.com/tauri-apps/tauri-action/commit/8e6f88e39f9947e2d20a1a23632f93b84e913acb)([#499](https://www.github.com/tauri-apps/tauri-action/pull/499)) The action now prefers release builds for the latest.json file if both, release and debug releases are enabled.
+- [`36a1260`](https://www.github.com/tauri-apps/tauri-action/commit/36a12601f6d5fcfbcea27f53a8bb5379327c2a19)([#490](https://www.github.com/tauri-apps/tauri-action/pull/490)) Correctly detect self-hosted macOS-arm64 runners.
+- [`8d5274b`](https://www.github.com/tauri-apps/tauri-action/commit/8d5274b2b3f1e03582a13e1d216003a91170b366)([#477](https://www.github.com/tauri-apps/tauri-action/pull/477)) Read config after `tauri init` command and without hardcoding the `tauri.conf.json` path, fixes action failures without error messages on repos without an existing Tauri project.
+
 ## \[0.4.2]
 
 - [`2eff2b4`](https://www.github.com/tauri-apps/tauri-action/commit/2eff2b4cc16cf4137d15f997a010f7c781c6276b)([#469](https://www.github.com/tauri-apps/tauri-action/pull/469)) Fix incorrect querying of remote repos to prevent duplicate draft releases. This was only an issue if the `owner` and `repo` configs added in v0.4.1 were set to a different repository than the one the action runs in and if `draftRelease` was set to `true`.
