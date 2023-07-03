@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev
+      - win_aarch64
 
 jobs:
   covector:
