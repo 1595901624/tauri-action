@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import fs from 'node:fs';
 
 import { initProject } from './init-project';
 import { getRunner } from './runner';
@@ -19,6 +20,7 @@ export async function buildProject(
   buildOpts: BuildOptions,
   initOpts: InitOptions,
   retryAttempts: number,
+  artifactName?: string, // Artifact name for the artifact to be uploaded
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -70,9 +72,9 @@ export async function buildProject(
     root,
     targetInfo.platform === 'macos'
       ? {
-          TAURI_BUNDLER_DMG_IGNORE_CI:
-            process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
-        }
+        TAURI_BUNDLER_DMG_IGNORE_CI:
+          process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
+      }
       : undefined,
     retryAttempts,
   );
@@ -82,6 +84,13 @@ export async function buildProject(
   // with tauri-cli 2.0.0-beta.21 rpm will do too.
   const linuxFileAppName = app.name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
+    .replace(/[ _.]/g, '-')
+    .replace(/[()[\]{}]/g, '')
+    .toLowerCase();
+
+  const linuxArtifactName = artifactName
+    ?.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
     .replace(/[ _.]/g, '-')
     .replace(/[()[\]{}]/g, '')
@@ -328,5 +337,33 @@ export async function buildProject(
   console.log(
     `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`,
   );
-  return artifacts.filter((p) => existsSync(p.path));
+
+  // filter artifacts that exist
+  return artifacts.flatMap((artifact) => {
+    if (existsSync(artifact.path)) {
+      console.log(`Found artifact: ${artifact.path}`);
+      // rename artifact to artifactName if it is not empty
+      if (artifactName) {
+        // rename app.name to artifactName
+        // if linux, rename to linuxArtifactName
+        let newPath = artifact.path;
+        if (targetInfo.platform === 'linux') {
+          newPath = newPath.replace(
+            linuxFileAppName ?? app.name,
+            linuxArtifactName ?? artifactName,
+          );
+        } else {
+          newPath = newPath.replace(app.name, artifactName);
+        }
+        // rename artifact
+        fs.renameSync(artifact.path, newPath);
+        console.log(`Renamed artifact: ${newPath}`);
+        artifact.path = newPath;
+      }
+      return [artifact];
+    }
+    return [];
+  })
+
+  // return artifacts.filter((p) => existsSync(p.path));
 }

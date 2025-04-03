@@ -73,6 +73,12 @@ async function run(): Promise<void> {
     const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
+    const artifactNameArgIdx = [...args].findIndex(
+      (e) => e === '-n' || e === '--artifact-name',
+    );
+    const artifactName =
+      artifactNameArgIdx >= 0 ? [...args][artifactNameArgIdx + 1] : undefined;
+
     const releaseArtifacts: Artifact[] = [];
     const debugArtifacts: Artifact[] = [];
 
@@ -84,6 +90,7 @@ async function run(): Promise<void> {
           buildOptions,
           initOptions,
           retryAttempts,
+          artifactName,
         )),
       );
     }
@@ -95,6 +102,7 @@ async function run(): Promise<void> {
           buildOptions,
           initOptions,
           retryAttempts,
+          artifactName,
         )),
       );
     }
