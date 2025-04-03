@@ -99,6 +99,7 @@ export async function buildProject(
     ?.replace(/[()[\]{}]/g, '')
     ?.toLowerCase();
 
+  console.log(`Using artifact name: ${artifactName}`);
   console.log(
     `Using linux artifact name: ${linuxArtifactName} ${linuxFileAppName}`
   );
@@ -341,6 +342,10 @@ export async function buildProject(
     }
   }
 
+  console.log(`Using artifact name=: ${artifactName}`);
+  console.log(
+    `Using linux artifact name=: ${linuxArtifactName} ${linuxFileAppName}`
+  );
   console.log(
     `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`,
   );
