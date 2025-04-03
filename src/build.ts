@@ -22,6 +22,9 @@ export async function buildProject(
   retryAttempts: number,
   artifactName?: string, // Artifact name for the artifact to be uploaded
 ): Promise<Artifact[]> {
+
+  console.log(`Using artifact name: ${artifactName}`);
+
   const runner = await getRunner(root, buildOpts.tauriScript);
 
   const tauriArgs = debug
@@ -91,10 +94,14 @@ export async function buildProject(
 
   const linuxArtifactName = artifactName
     ?.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
-    .replace(/[ _.]/g, '-')
-    .replace(/[()[\]{}]/g, '')
-    .toLowerCase();
+    ?.replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
+    ?.replace(/[ _.]/g, '-')
+    ?.replace(/[()[\]{}]/g, '')
+    ?.toLowerCase();
+
+  console.log(
+    `Using linux artifact name: ${linuxArtifactName} ${linuxFileAppName}`
+  );
 
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
