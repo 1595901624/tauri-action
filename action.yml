@@ -71,7 +71,6 @@ outputs:
     description: 'The paths of the generated artifacts'
   appVersion:
     description: 'The version of the app'
-    default: ''
 runs:
   using: 'node20'
   main: 'dist/index.js'
