@@ -343,7 +343,7 @@ export async function buildProject(
     if (existsSync(artifact.path)) {
       console.log(`Found artifact: ${artifact.path}`);
       // rename artifact to artifactName if it is not empty
-      if (artifactName) {
+      if (artifactName != null && artifactName != '') {
         // rename app.name to artifactName
         // if linux, rename to linuxArtifactName
         let newPath = artifact.path;

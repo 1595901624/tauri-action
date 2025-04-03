@@ -33,6 +33,7 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
+    const artifactName = core.getInput('artifactName') ?? '';
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
@@ -72,12 +73,6 @@ async function run(): Promise<void> {
     );
     const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
-
-    const artifactNameArgIdx = [...args].findIndex(
-      (e) => e === '-n' || e === '--artifact-name',
-    );
-    const artifactName =
-      artifactNameArgIdx >= 0 ? [...args][artifactNameArgIdx + 1] : undefined;
 
     const releaseArtifacts: Artifact[] = [];
     const debugArtifacts: Artifact[] = [];
