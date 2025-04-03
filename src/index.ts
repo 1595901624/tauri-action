@@ -35,6 +35,8 @@ async function run(): Promise<void> {
     const bundleIdentifier = core.getInput('bundleIdentifier');
     const artifactName = core.getInput('artifactName') ?? '';
 
+    console.log(`Using artifact name: ${artifactName}`);
+
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
